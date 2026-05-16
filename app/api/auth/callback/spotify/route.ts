@@ -1,4 +1,5 @@
 import { getToken } from '@/lib/spotify'
+import { createServerSupabaseClient } from '@/lib/supabase-server'
 import { NextRequest } from 'next/server'
 
 export async function GET(request: NextRequest) {
@@ -8,12 +9,22 @@ export async function GET(request: NextRequest) {
     return Response.json({ error: 'No code provided' }, { status: 400 })
   }
 
-  // 認証コードをアクセストークンに交換
+  // SpotifyのトークンをAPIから取得
   const tokenData = await getToken(code)
 
-  // 取得できたか確認（後でSupabaseに保存する処理に置き換える）
-  console.log('Token取得成功:', tokenData)
+  // ログイン中のユーザーを取得
+  const supabase = await createServerSupabaseClient()
+  const { data: { user } } = await supabase.auth.getUser()
 
-  // ホームにリダイレクト
+  if (user) {
+    // トークンをDBに保存（すでにあれば上書き）
+    await supabase.from('spotify_tokens').upsert({
+      user_id: user.id,
+      access_token: tokenData.access_token,
+      refresh_token: tokenData.refresh_token,
+      expires_at: new Date(Date.now() + tokenData.expires_in * 1000),
+    })
+  }
+
   return Response.redirect('http://127.0.0.1:3000')
 }

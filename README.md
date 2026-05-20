@@ -1,36 +1,39 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# セットリスト管理アプリ
 
-## Getting Started
+## 概要
+DJがセットリストを作成・管理・公開できるWebアプリです。
+Figmaでプロトタイプを設計し、フルスタックで実装しました。
 
-First, run the development server:
+## 使用技術
+| カテゴリ | 技術 |
+|---|---|
+| フロントエンド | Next.js 14, Tailwind CSS |
+| バックエンド | Next.js API Routes |
+| DB・認証 | Supabase |
+| 外部API | iTunes Search API |
+| デプロイ | Vercel |
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 機能一覧
+- ユーザー認証（メールアドレス）
+- セットリストの作成・編集・削除・公開設定
+- iTunes APIによる曲検索・追加
+- BPM・キー・アルバムアートの表示
+- 30秒プレビュー再生
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 技術選定の理由・工夫した点
+### iTunes Search APIへの切替
+当初Spotify APIを使用予定でしたが、2024年の仕様変更により
+無料アカウントでの利用が制限されました。
+代替としてITunes Search APIを採用し、認証不要・無料で
+同等の機能を実現しました。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Supabase RLSによるセキュリティ設計
+Row Level Securityを用いて、DBレベルで
+他ユーザーのデータへのアクセスを防いでいます。
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## セットアップ方法
+（後で書く）
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 今後の追加予定
+- BPMの流れをグラフで可視化
+- 他ユーザーのセトリ閲覧・いいね機能

@@ -1,7 +1,10 @@
 import { createServerSupabaseClient } from '@/lib/supabase-server'
 
-// セットリスト一覧を取得する（Read）
-export async function GET() {
+// 特定のセットリストを更新する（Update）
+export async function PATCH(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   const supabase = await createServerSupabaseClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -9,11 +12,16 @@ export async function GET() {
     return Response.json({ error: 'ログインが必要です' }, { status: 401 })
   }
 
+  const { id } = await params
+  const body = await request.json()
+
   const { data, error } = await supabase
     .from('setlists')
-    .select('*, tracks(count)')   // トラック数も一緒に取得
-    .eq('user_id', user.id)
-    .order('created_at', { ascending: false })
+    .update(body)
+    .eq('id', id)
+    .eq('user_id', user.id)   // 自分のセットリストだけ更新できる
+    .select()
+    .single()
 
   if (error) {
     return Response.json({ error: error.message }, { status: 500 })
@@ -21,8 +29,11 @@ export async function GET() {
   return Response.json(data)
 }
 
-// セットリストを新規作成する（Create）
-export async function POST(request: Request) {
+// 特定のセットリストを削除する（Delete）
+export async function DELETE(
+  _request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   const supabase = await createServerSupabaseClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -30,16 +41,16 @@ export async function POST(request: Request) {
     return Response.json({ error: 'ログインが必要です' }, { status: 401 })
   }
 
-  const { title, genre, is_public } = await request.json()
+  const { id } = await params
 
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from('setlists')
-    .insert({ user_id: user.id, title, genre, is_public })
-    .select()
-    .single()
+    .delete()
+    .eq('id', id)
+    .eq('user_id', user.id)
 
   if (error) {
     return Response.json({ error: error.message }, { status: 500 })
   }
-  return Response.json(data, { status: 201 })
+  return new Response(null, { status: 204 })
 }

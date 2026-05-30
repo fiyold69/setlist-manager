@@ -2,7 +2,9 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { AuthProvider } from '@/context/AuthContext'
+import { AudioPlayerProvider } from '@/context/AudioContext'
 import Navbar from '@/components/Navbar'
+import { ToastProvider } from '@/context/ToastContext'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -20,10 +22,14 @@ export default function RootLayout({
     <html lang="ja">
       <body className={`${inter.className} bg-surface min-h-screen`}>
         <AuthProvider>
-          <Navbar />
-          <main className="max-w-2x1 mx-auto px-4 py-8">
-            {children}
-          </main>
+          <AudioPlayerProvider>
+            <ToastProvider>
+              <Navbar />
+              <main className="max-w-2x1 mx-auto px-4 py-8">
+                {children}
+              </main>
+            </ToastProvider>
+          </AudioPlayerProvider>
         </AuthProvider>
       </body>
     </html>

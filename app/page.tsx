@@ -1,101 +1,121 @@
 'use client'
-import { useState, useEffect } from 'react'
-import { getAuthUrl } from '@/lib/spotify'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useAuth } from '@/context/AuthContext'
+import SetlistCard from '@/components/SetlistCard'
 
-export default function Home() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [message, setMessage] = useState('')
-  const [authUrl, setAuthUrl] = useState('')
+type Setlist = {
+  id: string
+  title: string
+  genre: string | null
+  is_public: boolean
+  tracks: { count: number }[]
+}
 
+export default function HomePage() {
+  const { user, loading: authLoading } = useAuth()
+  const router = useRouter()
+  const [setlists, setSetlists] = useState<Setlist[]>([])
+  const [loading, setLoading] = useState(true)
+  const [showForm, setShowForm] = useState(false)
+  const [title, setTitle] = useState('')
+  const [genre, setGenre] = useState('')
+
+  // 未ログインならログイン画面へ
   useEffect(() => {
-    fetch('/api/spotify/auth-url')
-      .then(res => res.json())
-      .then(data => setAuthUrl(data.url))
-  }, [])
+    if (!authLoading && !user) {
+      router.push('/login')
+    }
+  }, [user, authLoading, router])
 
-  async function handleSignUp() {
-    const res = await fetch('/api/auth/supabase/signup', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    })
+  // セットリスト一覧を取得
+  async function fetchSetlists() {
+    const res = await fetch('/api/setlists')
     const data = await res.json()
-    setMessage(data.error ?? 'サインアップ成功！')
+    if (Array.isArray(data)) {
+      setSetlists(data)
+    }
+    setLoading(false)
   }
 
-  async function handleLogin() {
-    const res = await fetch('/api/auth/supabase/login', {
+  useEffect(() => {
+    if (user) fetchSetlists()
+  }, [user])
+
+  // 新規作成
+  async function handleCreate() {
+    if (!title.trim()) return
+    const res = await fetch('/api/setlists', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ title, genre, is_public: false }),
     })
-    const data = await res.json()
-    setMessage(data.error ?? 'ログイン成功！')
+    if (res.ok) {
+      setTitle('')
+      setGenre('')
+      setShowForm(false)
+      fetchSetlists()
+    }
+  }
+
+  if (authLoading || loading) {
+    return <p className="text-center text-gray-400 py-12">読み込み中...</p>
   }
 
   return (
-    <main style={{ padding: 40 }}>
-      {authUrl && <a href={authUrl}>Spotifyでログイン</a>}<br /><br />
-      <input placeholder="email" value={email}
-        onChange={e => setEmail(e.target.value)} /><br /><br />
-      <input placeholder="password" type="password" value={password}
-        onChange={e => setPassword(e.target.value)} /><br /><br />
-      <button onClick={handleSignUp}>サインアップ</button>
-      <button onClick={handleLogin} style={{ marginLeft: 8 }}>ログイン</button>
-      <br /><br />
-      <button
-        type="button"
-        onClick={async () => {
-          const res = await fetch('/api/setlists', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              title: 'テストセトリ',
-              genre: 'Techno',
-              is_public: false,
-            }),
-          })
-          const data = await res.json()
-          setMessage(JSON.stringify(data))
-        }}
-      >
-        セットリスト作成
-      </button>
+    <div>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold text-gray-800">My Setlists</h1>
+        <button
+          type="button"
+          onClick={() => setShowForm(!showForm)}
+          className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+        >
+          {showForm ? 'キャンセル' : '+ 新規作成'}
+        </button>
+      </div>
 
-      <button
-        type="button"
-        onClick={async () => {
-          const res = await fetch('/api/setlists')
-          const data = await res.json()
-          setMessage(JSON.stringify(data))
-        }}
-        style={{ marginLeft: 8 }}
-      >
-        セットリスト取得
-      </button>
-      <button
-        type="button"
-        onClick={async () => {
-          const res = await fetch('/api/tracks', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              setlist_id: '15ac9ba2-510c-478b-b71e-56e36abb8780',
-              title: 'Acid Rain',
-              artist: 'Unknown',
-              bpm: 132,
-              key: 'Dm',
-            }),
-          })
-          const data = await res.json()
-          setMessage(JSON.stringify(data))
-        }}
-        style={{ marginLeft: 8 }}
-      >
-        トラック追加
-      </button>
-      <p>{message}</p>
-    </main>
+      {/* 新規作成フォーム */}
+      {showForm && (
+        <div className="bg-white rounded-2xl p-5 border border-gray-100 mb-6">
+          <div className="flex flex-col gap-3">
+            <input
+              placeholder="セットリスト名"
+              value={title}
+              onChange={e => setTitle(e.target.value)}
+              className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-indigo-400"
+            />
+            <input
+              placeholder="ジャンル（例: Techno）"
+              value={genre}
+              onChange={e => setGenre(e.target.value)}
+              className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-indigo-400"
+            />
+            <button
+              type="button"
+              onClick={handleCreate}
+              className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium py-2.5 rounded-xl transition-colors"
+            >
+              作成する
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* 一覧 */}
+      {setlists.length === 0 ? (
+        <div className="text-center py-16 text-gray-400">
+          <p className="text-4xl mb-3">🎵</p>
+          <p>まだセットリストがありません</p>
+          <p className="text-sm mt-1">「+ 新規作成」から始めましょう</p>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-3">
+          {setlists.map(setlist => (
+            <SetlistCard key={setlist.id} setlist={setlist} />
+          ))}
+        </div>
+      )}
+    </div>
   )
 }

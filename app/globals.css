@@ -1,10 +1,45 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
+@source "../components/**/*.{js,ts,jsx,tsx}";
+@source "../context/**/*.{js,ts,jsx,tsx}";
+@source "../lib/**/*.{js,ts,jsx,tsx}";
+
+@theme {
+  /* Primary（紫） */
+  --color-primary: #534AB7;
+  --color-primary-light: #EEEDFE;
+  --color-primary-dark: #26215C;
+
+  /* Surface（背景） */
+  --color-surface: #F8F7F2;
+  --color-surface-card: #FFFFFF;
+}
+
+body {
+  background-color: var(--color-surface);
+  color: #1a1a1a;
+}
+
+/*
 @layer base {
   body {
     background-color: #F8F7F2;
     color: #1a1a1a;
   }
+}
+*/
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.2s ease-out;
 }

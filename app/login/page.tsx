@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
+import { createClient } from '@/lib/supabase'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -15,20 +16,27 @@ export default function LoginPage() {
     setLoading(true)
     setError('')
 
-    const endpoint = isSignUp
-      ? '/api/auth/supabase/signup'
-      : '/api/auth/supabase/login'
+    const supabase = createClient()
 
-    const res = await fetch(endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    })
-    const data = await res.json()
-
-    if (data.error) {
-      setError(data.error)
+    if (isSignUp) {
+      const { error } = await supabase.auth.signUp({ email, password })
+      if (error) {
+        setError(error.message)
+        setLoading(false)
+        return
+      }
     } else {
+      const { error } = await supabase.auth.signInWithPassword({ email, password })
+      if (error) {
+        setError(error.message)
+        setLoading(false)
+        return
+      }
+    }
+
+    // セッションが確実に確立されてから遷移
+    const { data: { session } } = await supabase.auth.getSession()
+    if (session) {
       router.push('/')
       router.refresh()
     }

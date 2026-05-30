@@ -42,6 +42,16 @@ export async function DELETE(
 
   const { id } = await params
 
+  const { data: track } = await supabase
+    .from('tracks')
+    .select('setlist_id')
+    .eq('id', id)
+    .single()
+
+  if (!track) {
+    return Response.json({ error: 'Not found' }, { status: 404 })
+  }
+
   const { error } = await supabase
     .from('tracks')
     .delete()
@@ -50,5 +60,23 @@ export async function DELETE(
   if (error) {
     return Response.json({ error: error.message }, { status: 500 })
   }
+  
+  const { data: remaining } = await supabase
+    .from('tracks')
+    .select('id')
+    .eq('setlist_id', track.setlist_id)
+    .order('position', { ascending: true })
+
+  if (remaining) {
+    await Promise.all(
+      remaining.map((t, i) =>
+        supabase
+          .from('tracks')
+          .update({ position: i + 1 })
+          .eq('id', t.id)
+      )
+    )
+  }
+
   return new Response(null, { status: 204 })
 }

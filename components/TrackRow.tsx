@@ -17,10 +17,12 @@ export default function TrackRow({
   track,
   onDelete,
   onUpdate,
+  dragHandleProps,
 }: {
   track: Track
   onDelete: (id: string) => void
   onUpdate: () => void
+  dragHandleProps?: React.HTMLAttributes<HTMLDivElement>
 }) {
   const [editing, setEditing] = useState(false)
   const [bpm, setBPM] = useState(track.bpm?.toString() ?? '')
@@ -40,7 +42,13 @@ export default function TrackRow({
   }
 
   return (
-    <div className="flex items-center gap-3 bg-white rounded-xl p-3 border border-gray-100">
+    <div className="flex items-center gap-3 bg-white rounded-xl p-3 border border-gray-100 hover:border-indigo-100 hover:shadow-sm transition-all duration-200">
+      <div
+        className="text-gray-300 hover:text-gray-400 cursor-grab active:cursor-grabbing px-1 shrink-0 select-none"
+        {...dragHandleProps}
+      >
+        ⠿
+      </div>
       <span className="text-sm text-gray-300 w-5 text-center shrink-0">
         {track.position}
       </span>

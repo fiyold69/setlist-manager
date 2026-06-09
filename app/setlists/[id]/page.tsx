@@ -2,9 +2,12 @@
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import TrackSearch from '@/components/TrackSearch'
-import TrackRow from '@/components/TrackRow'
 import Modal from '@/components/Modal'
 import ManualTrackForm from '@/components/ManualTrackForm'
+import { TrackRowSkeleton } from '@/components/Skeleton'
+import SortableTrackRow from '@/components/SortableTrackRow'
+import { DndContext, closestCenter, type DragEndEvent } from '@dnd-kit/core'
+import { SortableContext, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable'
 
 type Track = {
   id: string
@@ -100,6 +103,31 @@ export default function SetlistDetailPage() {
     fetchTracks()
   }
 
+  async function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event
+    if (!over || active.id === over.id) return
+
+    const oldIndex = tracks.findIndex(t => t.id === active.id)
+    const newIndex = tracks.findIndex(t => t.id === over.id)
+    const reordered = arrayMove(tracks, oldIndex, newIndex)
+    const withUpdatedPositions = reordered.map((t, i) => ({ ...t, position: i + 1 }))
+
+    setTracks(withUpdatedPositions)
+
+    await fetch('/api/tracks/reorder', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        updates: withUpdatedPositions.map(t => ({ id: t.id, position: t.position })),
+      }),
+    })
+  }
+
+  const bpmTracks = tracks.filter(t => t.bpm !== null)
+  const avgBpm = bpmTracks.length > 0
+    ? Math.round(bpmTracks.reduce((sum, t) => sum + t.bpm!, 0) / bpmTracks.length)
+    : null
+
   if (!setlist) {
     return <p className="text-center text-gray-400 py-12">読み込み中...</p>
   }
@@ -160,6 +188,9 @@ export default function SetlistDetailPage() {
                   )}
                   <span className="text-xs text-gray-400">
                     {tracks.length} tracks
+                    {avgBpm !== null && (
+                      <> · 平均 <span className="text-indigo-500 font-medium">{avgBpm} BPM</span></>
+                    )}
                   </span>
                 </div>
               </div>
@@ -204,7 +235,7 @@ export default function SetlistDetailPage() {
         <button
           type="button"
           onClick={() => setSearchOpen(true)}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+          className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-all active:scale-95"
         >
           + 曲を追加
         </button>
@@ -212,25 +243,46 @@ export default function SetlistDetailPage() {
 
       {/* トラック一覧 */}
       {loading ? (
-        <p className="text-center text-gray-400 py-8">読み込み中...</p>
+        <div className="flex flex-col gap-2">
+          <TrackRowSkeleton />
+          <TrackRowSkeleton />
+          <TrackRowSkeleton />
+          <TrackRowSkeleton />
+        </div>
       ) : tracks.length === 0 ? (
-        <div className="text-center py-12 text-gray-400">
-          <p>まだ曲がありません</p>
-          <p className="text-sm mt-1">
-            右上の「+ 曲を追加」から始めましょう
-          </p>
+        <div className="text-center py-12 text-gray-400 flex flex-col items-center gap-3">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" className="text-indigo-200">
+            <path d="M9 18V5l12-2v13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            <circle cx="6" cy="18" r="3" stroke="currentColor" strokeWidth="1.5"/>
+            <circle cx="18" cy="16" r="3" stroke="currentColor" strokeWidth="1.5"/>
+          </svg>
+          <div>
+            <p className="text-gray-600 font-medium">最初の曲を追加しよう</p>
+            <p className="text-sm mt-1">iTunes検索か手動入力で追加できます</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setSearchOpen(true)}
+            className="mt-1 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-5 py-2.5 rounded-xl transition-colors"
+          >
+            + 曲を追加
+          </button>
         </div>
       ) : (
-        <div className="flex flex-col gap-2">
-          {tracks.map(track => (
-            <TrackRow
-              key={track.id}
-              track={track}
-              onDelete={handleDeleteTrack}
-              onUpdate={fetchTracks}
-            />
-          ))}
-        </div>
+        <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+          <SortableContext items={tracks.map(t => t.id)} strategy={verticalListSortingStrategy}>
+            <div className="flex flex-col gap-2">
+              {tracks.map(track => (
+                <SortableTrackRow
+                  key={track.id}
+                  track={track}
+                  onDelete={handleDeleteTrack}
+                  onUpdate={fetchTracks}
+                />
+              ))}
+            </div>
+          </SortableContext>
+        </DndContext>
       )}
 
       {/* 検索モーダル */}

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
 import SetlistCard from '@/components/SetlistCard'
+import { SetlistCardSkeleton } from '@/components/Skeleton'
 
 type Setlist = {
   id: string
@@ -58,8 +59,8 @@ export default function HomePage() {
     }
   }
 
-  if (authLoading || loading) {
-    return <p className="text-center text-gray-400 py-12">読み込み中...</p>
+  if (authLoading) {
+    return null
   }
 
   return (
@@ -69,7 +70,7 @@ export default function HomePage() {
         <button
           type="button"
           onClick={() => setShowForm(!showForm)}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+          className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-all active:scale-95"
         >
           {showForm ? 'キャンセル' : '+ 新規作成'}
         </button>
@@ -94,7 +95,7 @@ export default function HomePage() {
             <button
               type="button"
               onClick={handleCreate}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium py-2.5 rounded-xl transition-colors"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium py-2.5 rounded-xl transition-all active:scale-95"
             >
               作成する
             </button>
@@ -103,11 +104,30 @@ export default function HomePage() {
       )}
 
       {/* 一覧 */}
-      {setlists.length === 0 ? (
-        <div className="text-center py-16 text-gray-400">
-          <p className="text-4xl mb-3">🎵</p>
-          <p>まだセットリストがありません</p>
-          <p className="text-sm mt-1">「+ 新規作成」から始めましょう</p>
+      {loading ? (
+        <div className="flex flex-col gap-3">
+          <SetlistCardSkeleton />
+          <SetlistCardSkeleton />
+          <SetlistCardSkeleton />
+        </div>
+      ) : setlists.length === 0 ? (
+        <div className="text-center py-16 text-gray-400 flex flex-col items-center gap-3">
+          <svg width="56" height="56" viewBox="0 0 24 24" fill="none" className="text-indigo-200">
+            <path d="M9 18V5l12-2v13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            <circle cx="6" cy="18" r="3" stroke="currentColor" strokeWidth="1.5"/>
+            <circle cx="18" cy="16" r="3" stroke="currentColor" strokeWidth="1.5"/>
+          </svg>
+          <div>
+            <p className="text-gray-600 font-medium">最初のセットリストを作成しよう</p>
+            <p className="text-sm mt-1">あなたのDJセットを記録・管理できます</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setShowForm(true)}
+            className="mt-1 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-5 py-2.5 rounded-xl transition-colors"
+          >
+            + セットリストを作成
+          </button>
         </div>
       ) : (
         <div className="flex flex-col gap-3">

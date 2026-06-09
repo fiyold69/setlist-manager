@@ -15,7 +15,7 @@ export default function SetlistCard({ setlist }: { setlist: Setlist }) {
   return (
     <Link
       href={`/setlists/${setlist.id}`}
-      className="block bg-white rounded-2xl p-5 border border-gray-100 hover:border-indigo-200 hover:shadow-sm transition-all"
+      className="block bg-white rounded-2xl p-5 border border-gray-100 hover:border-indigo-200 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
     >
       <div className="flex items-start justify-between">
         <div>

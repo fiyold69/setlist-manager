@@ -45,6 +45,7 @@ export default function TrackRow({
     <div className="flex items-center gap-3 bg-white rounded-xl p-3 border border-gray-100 hover:border-indigo-100 hover:shadow-sm transition-all duration-200">
       <div
         className="text-gray-300 hover:text-gray-400 cursor-grab active:cursor-grabbing px-1 shrink-0 select-none"
+        style={{ touchAction: 'none' }}
         {...dragHandleProps}
       >
         ⠿

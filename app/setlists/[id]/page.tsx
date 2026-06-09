@@ -6,7 +6,7 @@ import Modal from '@/components/Modal'
 import ManualTrackForm from '@/components/ManualTrackForm'
 import { TrackRowSkeleton } from '@/components/Skeleton'
 import SortableTrackRow from '@/components/SortableTrackRow'
-import { DndContext, closestCenter, type DragEndEvent } from '@dnd-kit/core'
+import { DndContext, closestCenter, type DragEndEvent, useSensor, useSensors, MouseSensor, TouchSensor } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable'
 
 type Track = {
@@ -102,6 +102,16 @@ export default function SetlistDetailPage() {
     await fetch(`/api/tracks/${id}`, { method: 'DELETE' })
     fetchTracks()
   }
+
+  const sensors = useSensors(
+    useSensor(MouseSensor),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 250,
+        tolerance: 5,
+      },
+    })
+  )
 
   async function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event
@@ -269,7 +279,7 @@ export default function SetlistDetailPage() {
           </button>
         </div>
       ) : (
-        <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
           <SortableContext items={tracks.map(t => t.id)} strategy={verticalListSortingStrategy}>
             <div className="flex flex-col gap-2">
               {tracks.map(track => (

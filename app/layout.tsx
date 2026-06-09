@@ -20,7 +20,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ja">
-      <body className={`${inter.className} bg-surface min-h-screen`}>
+      <body className={`${inter.className} bg-surface dark:bg-gray-900 min-h-screen`}>
         <AuthProvider>
           <AudioPlayerProvider>
             <ToastProvider>

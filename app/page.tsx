@@ -66,7 +66,7 @@ export default function HomePage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">My Setlists</h1>
+        <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">My Setlists</h1>
         <button
           type="button"
           onClick={() => setShowForm(!showForm)}
@@ -78,19 +78,19 @@ export default function HomePage() {
 
       {/* 新規作成フォーム */}
       {showForm && (
-        <div className="bg-white rounded-2xl p-5 border border-gray-100 mb-6">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 mb-6">
           <div className="flex flex-col gap-3">
             <input
               placeholder="セットリスト名"
               value={title}
               onChange={e => setTitle(e.target.value)}
-              className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-indigo-400"
+              className="border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-500 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-indigo-400"
             />
             <input
               placeholder="ジャンル（例: Techno）"
               value={genre}
               onChange={e => setGenre(e.target.value)}
-              className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-indigo-400"
+              className="border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-500 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-indigo-400"
             />
             <button
               type="button"
@@ -112,14 +112,14 @@ export default function HomePage() {
         </div>
       ) : setlists.length === 0 ? (
         <div className="text-center py-16 text-gray-400 flex flex-col items-center gap-3">
-          <svg width="56" height="56" viewBox="0 0 24 24" fill="none" className="text-indigo-200">
+          <svg width="56" height="56" viewBox="0 0 24 24" fill="none" className="text-indigo-200 dark:text-indigo-800">
             <path d="M9 18V5l12-2v13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             <circle cx="6" cy="18" r="3" stroke="currentColor" strokeWidth="1.5"/>
             <circle cx="18" cy="16" r="3" stroke="currentColor" strokeWidth="1.5"/>
           </svg>
           <div>
-            <p className="text-gray-600 font-medium">最初のセットリストを作成しよう</p>
-            <p className="text-sm mt-1">あなたのDJセットを記録・管理できます</p>
+            <p className="text-gray-600 dark:text-gray-300 font-medium">最初のセットリストを作成しよう</p>
+            <p className="text-sm mt-1 dark:text-gray-500">あなたのDJセットを記録・管理できます</p>
           </div>
           <button
             type="button"

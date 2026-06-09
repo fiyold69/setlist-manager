@@ -42,15 +42,15 @@ export default function TrackRow({
   }
 
   return (
-    <div className="flex items-center gap-3 bg-white rounded-xl p-3 border border-gray-100 hover:border-indigo-100 hover:shadow-sm transition-all duration-200">
+    <div className="flex items-center gap-3 bg-white dark:bg-gray-800 rounded-xl p-3 border border-gray-100 dark:border-gray-700 hover:border-indigo-100 dark:hover:border-indigo-700 hover:shadow-sm transition-all duration-200">
       <div
-        className="text-gray-300 hover:text-gray-400 cursor-grab active:cursor-grabbing px-1 shrink-0 select-none"
+        className="text-gray-300 dark:text-gray-600 hover:text-gray-400 cursor-grab active:cursor-grabbing px-1 shrink-0 select-none"
         style={{ touchAction: 'none' }}
         {...dragHandleProps}
       >
         ⠿
       </div>
-      <span className="text-sm text-gray-300 w-5 text-center shrink-0">
+      <span className="text-sm text-gray-300 dark:text-gray-600 w-5 text-center shrink-0">
         {track.position}
       </span>
 
@@ -63,14 +63,14 @@ export default function TrackRow({
           className="w-10 h-10 rounded-lg object-cover"
         />
       ) : (
-        <div className="w-10 h-10 rounded-lg bg-gray-100" />
+        <div className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-700" />
       )}
 
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-gray-800 truncate">
+        <p className="text-sm font-medium text-gray-800 dark:text-gray-100 truncate">
           {track.title}
         </p>
-        <p className="text-xs text-gray-400 truncate">{track.artist}</p>
+        <p className="text-xs text-gray-400 dark:text-gray-500 truncate">{track.artist}</p>
       </div>
 
       {editing ? (
@@ -80,13 +80,13 @@ export default function TrackRow({
             onChange={e => setBPM(e.target.value)}
             placeholder="BPM"
             type="number"
-            className="w-16 border border-gray-200 rounded-lg px-2 py-1 text-xs outline-none focus:border-indigo-400"
+            className="w-16 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-500 rounded-lg px-2 py-1 text-xs outline-none focus:border-indigo-400"
           />
           <input
             value={key}
             onChange={e => setKey(e.target.value)}
             placeholder="Key"
-            className="w-14 border border-gray-200 rounded-lg px-2 py-1 text-xs outline-none focus:border-indigo-400"
+            className="w-14 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-500 rounded-lg px-2 py-1 text-xs outline-none focus:border-indigo-400"
           />
           <button
             type="button"
@@ -100,18 +100,18 @@ export default function TrackRow({
         <button
           type="button"
           onClick={() => setEditing(true)}
-          className="flex items-center gap-2 shrink-0 hover:bg-gray-50 px-2 py-1 rounded-lg transition-colors"
+          className="flex items-center gap-2 shrink-0 hover:bg-gray-50 dark:hover:bg-gray-700 px-2 py-1 rounded-lg transition-colors"
         >
           {track.bpm && (
-            <span className="text-xs text-gray-600">{track.bpm} BPM</span>
+            <span className="text-xs text-gray-600 dark:text-gray-300">{track.bpm} BPM</span>
           )}
           {track.key && (
-            <span className="text-xs bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-full">
+            <span className="text-xs bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-300 px-2 py-0.5 rounded-full">
               {track.key}
             </span>
           )}
           {!track.bpm && !track.key && (
-            <span className="text-xs text-gray-300">+ BPM/Key</span>
+            <span className="text-xs text-gray-300 dark:text-gray-600">+ BPM/Key</span>
           )}
         </button>
       )}

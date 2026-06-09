@@ -20,6 +20,17 @@ body {
   color: #1a1a1a;
 }
 
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-surface: #111827;
+    --color-surface-card: #1F2937;
+  }
+
+  body {
+    color: #F3F4F6;
+  }
+}
+
 /*
 @layer base {
   body {

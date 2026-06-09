@@ -54,20 +54,20 @@ export default function ManualTrackForm({
 
   return (
     <div className="flex flex-col gap-3">
-      <p className="text-xs text-gray-400">
+      <p className="text-xs text-gray-400 dark:text-gray-500">
         iTunesにない曲（Remix・Bootleg等）を手動で追加できます
       </p>
       <input
         placeholder="曲名 *"
         value={title}
         onChange={e => setTitle(e.target.value)}
-        className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-indigo-400"
+        className="border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-500 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-indigo-400"
       />
       <input
         placeholder="アーティスト"
         value={artist}
         onChange={e => setArtist(e.target.value)}
-        className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-indigo-400"
+        className="border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-500 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-indigo-400"
       />
       <div className="flex gap-2">
         <input
@@ -75,13 +75,13 @@ export default function ManualTrackForm({
           value={bpm}
           onChange={e => setBpm(e.target.value)}
           type="number"
-          className="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-indigo-400"
+          className="flex-1 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-500 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-indigo-400"
         />
         <input
           placeholder="Key（Am, F#m...）"
           value={key}
           onChange={e => setKey(e.target.value)}
-          className="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-indigo-400"
+          className="flex-1 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-500 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-indigo-400"
         />
       </div>
       <button

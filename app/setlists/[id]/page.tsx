@@ -145,26 +145,26 @@ export default function SetlistDetailPage() {
   return (
     <div>
       <div className="mb-6">
-        <a href="/" className="text-sm text-indigo-600 hover:underline">
+        <a href="/" className="text-sm text-indigo-600 dark:text-indigo-400 hover:underline">
           ← 一覧に戻る
         </a>
       </div>
 
       {/* セットリスト情報カード */}
-      <div className="bg-white rounded-2xl p-5 border border-gray-100 mb-6">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl p-5 border border-gray-100 dark:border-gray-700 mb-6">
         {editing ? (
           <div className="flex flex-col gap-3">
             <input
               value={editTitle}
               onChange={e => setEditTitle(e.target.value)}
               placeholder="セットリスト名"
-              className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-indigo-400"
+              className="border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-500 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-indigo-400"
             />
             <input
               value={editGenre}
               onChange={e => setEditGenre(e.target.value)}
               placeholder="ジャンル"
-              className="border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-indigo-400"
+              className="border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-500 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-indigo-400"
             />
             <div className="flex gap-2">
               <button
@@ -177,7 +177,7 @@ export default function SetlistDetailPage() {
               <button
                 type="button"
                 onClick={() => setEditing(false)}
-                className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-sm font-medium py-2 rounded-xl transition-colors"
+                className="flex-1 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300 text-sm font-medium py-2 rounded-xl transition-colors"
               >
                 キャンセル
               </button>
@@ -187,16 +187,16 @@ export default function SetlistDetailPage() {
           <div>
             <div className="flex items-start justify-between mb-3">
               <div>
-                <h1 className="text-xl font-bold text-gray-800">
+                <h1 className="text-xl font-bold text-gray-800 dark:text-gray-100">
                   {setlist.title}
                 </h1>
                 <div className="flex items-center gap-2 mt-1">
                   {setlist.genre && (
-                    <span className="text-xs bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full">
+                    <span className="text-xs bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-300 px-3 py-1 rounded-full">
                       {setlist.genre}
                     </span>
                   )}
-                  <span className="text-xs text-gray-400">
+                  <span className="text-xs text-gray-400 dark:text-gray-500">
                     {tracks.length} tracks
                     {avgBpm !== null && (
                       <> · 平均 <span className="text-indigo-500 font-medium">{avgBpm} BPM</span></>
@@ -208,7 +208,7 @@ export default function SetlistDetailPage() {
                 <button
                   type="button"
                   onClick={() => setEditing(true)}
-                  className="text-gray-400 hover:text-gray-600 text-sm transition-colors"
+                  className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-sm transition-colors"
                   aria-label="編集"
                 >
                   編集
@@ -230,8 +230,8 @@ export default function SetlistDetailPage() {
               onClick={togglePublic}
               className={`text-xs px-3 py-1.5 rounded-full transition-colors ${
                 setlist.is_public
-                  ? 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100'
-                  : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                  ? 'bg-emerald-50 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900'
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600'
               }`}
             >
               {setlist.is_public ? '🌐 公開中（クリックで非公開に）' : '🔒 非公開（クリックで公開）'}
@@ -261,14 +261,14 @@ export default function SetlistDetailPage() {
         </div>
       ) : tracks.length === 0 ? (
         <div className="text-center py-12 text-gray-400 flex flex-col items-center gap-3">
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" className="text-indigo-200">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" className="text-indigo-200 dark:text-indigo-800">
             <path d="M9 18V5l12-2v13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             <circle cx="6" cy="18" r="3" stroke="currentColor" strokeWidth="1.5"/>
             <circle cx="18" cy="16" r="3" stroke="currentColor" strokeWidth="1.5"/>
           </svg>
           <div>
-            <p className="text-gray-600 font-medium">最初の曲を追加しよう</p>
-            <p className="text-sm mt-1">iTunes検索か手動入力で追加できます</p>
+            <p className="text-gray-600 dark:text-gray-300 font-medium">最初の曲を追加しよう</p>
+            <p className="text-sm mt-1 dark:text-gray-500">iTunes検索か手動入力で追加できます</p>
           </div>
           <button
             type="button"
@@ -302,14 +302,14 @@ export default function SetlistDetailPage() {
         title="曲を追加"
       >
         {/* タブ切り替え */}
-        <div className="flex border-b border-gray-100 mb-4 -mx-5 -mt-5 px-5">
+        <div className="flex border-b border-gray-100 dark:border-gray-700 mb-4 -mx-5 -mt-5 px-5">
           <button
             type="button"
             onClick={() => setAddMode('search')}
             className={`px-4 py-3 text-sm font-medium transition-colors border-b-2 ${
               addMode === 'search'
-                ? 'text-indigo-600 border-indigo-600'
-                : 'text-gray-400 border-transparent hover:text-gray-600'
+                ? 'text-indigo-600 dark:text-indigo-400 border-indigo-600 dark:border-indigo-400'
+                : 'text-gray-400 dark:text-gray-500 border-transparent hover:text-gray-600 dark:hover:text-gray-300'
             }`}
           >
             iTunes検索
@@ -319,8 +319,8 @@ export default function SetlistDetailPage() {
             onClick={() => setAddMode('manual')}
             className={`px-4 py-3 text-sm font-medium transition-colors border-b-2 ${
               addMode === 'manual'
-                ? 'text-indigo-600 border-indigo-600'
-                : 'text-gray-400 border-transparent hover:text-gray-600'
+                ? 'text-indigo-600 dark:text-indigo-400 border-indigo-600 dark:border-indigo-400'
+                : 'text-gray-400 dark:text-gray-500 border-transparent hover:text-gray-600 dark:hover:text-gray-300'
             }`}
           >
             手動で追加

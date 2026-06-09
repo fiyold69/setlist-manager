@@ -49,18 +49,18 @@ export default function Modal({ open, onClose, title, children }: ModalProps) {
       {/* モーダル本体 */}
       <div className="absolute inset-0 flex items-center justify-center p-4 pointer-events-none">
         <div
-          className="relative w-full max-w-lg max-h-[85vh] bg-white rounded-2xl shadow-xl pointer-events-auto flex flex-col"
+          className="relative w-full max-w-lg max-h-[85vh] bg-white dark:bg-gray-800 rounded-2xl shadow-xl pointer-events-auto flex flex-col"
           onClick={e => e.stopPropagation()}
         >
           {/* ヘッダー */}
-          <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 shrink-0">
-            <h2 id="modal-title" className="font-semibold text-gray-800">
+          <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-gray-700 shrink-0">
+            <h2 id="modal-title" className="font-semibold text-gray-800 dark:text-gray-100">
               {title}
             </h2>
             <button
               type="button"
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 text-xl leading-none transition-colors"
+              className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-xl leading-none transition-colors"
               aria-label="閉じる"
             >
               ✕

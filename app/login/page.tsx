@@ -45,24 +45,24 @@ export default function LoginPage() {
 
   return (
     <div className="max-w-sm mx-auto mt-16">
-      <h1 className="text-2xl font-semibold text-gray-800 mb-8 text-center">
+      <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-8 text-center">
         {isSignUp ? 'アカウント作成' : 'ログイン'}
       </h1>
-      <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-gray-700">
         <div className="flex flex-col gap-4">
           <input
             type="email"
             placeholder="メールアドレス"
             value={email}
             onChange={e => setEmail(e.target.value)}
-            className="border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-primary transition-colors"
+            className="border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-500 rounded-xl px-4 py-3 text-sm outline-none focus:border-primary transition-colors"
           />
           <input
             type="password"
             placeholder="パスワード"
             value={password}
             onChange={e => setPassword(e.target.value)}
-            className="border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-primary transition-colors"
+            className="border border-gray-200 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-500 rounded-xl px-4 py-3 text-sm outline-none focus:border-primary transition-colors"
           />
           {error && (
             <p className="text-red-500 text-sm">{error}</p>
@@ -79,7 +79,7 @@ export default function LoginPage() {
         <button
           type="button"
           onClick={() => setIsSignUp(!isSignUp)}
-          className="w-full text-center text-sm text-gray-400 mt-6 hover:text-primary transition-colors"
+          className="w-full text-center text-sm text-gray-400 dark:text-gray-500 mt-6 hover:text-primary transition-colors"
         >
           {isSignUp
             ? 'すでにアカウントをお持ちの方はこちら'

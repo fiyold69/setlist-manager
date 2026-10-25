@@ -9,6 +9,17 @@ export async function PATCH(request: Request) {
   }
 
   const { updates } = await request.json() as { updates: { id: string; position: number }[] }
+  const ids = updates.map(u => u.id)
+
+  const { data: owned } = await supabase
+    .from('tracks')
+    .select('id, setlists!inner(user_id)')
+    .in('id', ids)
+    .eq('setlists.user_id', user.id)
+
+  if (!owned || owned.length !== ids.length) {
+    return Response.json({ error: '権限がありません' }, { status: 403 })
+  }
 
   await Promise.all(
     updates.map(({ id, position }) =>

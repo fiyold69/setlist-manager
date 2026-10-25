@@ -13,11 +13,16 @@ export async function PATCH(
   }
 
   const { id } = await params
-  const body = await request.json()
+  const { title, genre, is_public } = await request.json()
+
+  const updates: Record<string, unknown> = {}
+  if (title !== undefined) updates.title = title
+  if (genre !== undefined) updates.genre = genre
+  if (is_public !== undefined) updates.is_public = is_public
 
   const { data, error } = await supabase
     .from('setlists')
-    .update(body)
+    .update(updates)
     .eq('id', id)
     .eq('user_id', user.id)   // 自分のセットリストだけ更新できる
     .select()

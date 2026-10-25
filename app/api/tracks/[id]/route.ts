@@ -13,11 +13,22 @@ export async function PATCH(
   }
 
   const { id } = await params
-  const body = await request.json()
+  const { bpm, key } = await request.json()
+
+  const { data: owned } = await supabase
+    .from('tracks')
+    .select('id, setlists!inner(user_id)')
+    .eq('id', id)
+    .eq('setlists.user_id', user.id)
+    .single()
+
+  if (!owned) {
+    return Response.json({ error: 'Not found' }, { status: 404 })
+  }
 
   const { data, error } = await supabase
     .from('tracks')
-    .update(body)
+    .update({ bpm, key })
     .eq('id', id)
     .select()
     .single()
@@ -44,8 +55,9 @@ export async function DELETE(
 
   const { data: track } = await supabase
     .from('tracks')
-    .select('setlist_id')
+    .select('setlist_id, setlists!inner(user_id)')
     .eq('id', id)
+    .eq('setlists.user_id', user.id)
     .single()
 
   if (!track) {

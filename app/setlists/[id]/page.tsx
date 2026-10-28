@@ -1,11 +1,14 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
+import Link from 'next/link'
+
 import TrackSearch from '@/components/TrackSearch'
 import Modal from '@/components/Modal'
 import ManualTrackForm from '@/components/ManualTrackForm'
 import { TrackRowSkeleton } from '@/components/Skeleton'
 import SortableTrackRow from '@/components/SortableTrackRow'
+
 import { DndContext, closestCenter, type DragEndEvent, useSensor, useSensors, MouseSensor, TouchSensor } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable'
 
@@ -145,9 +148,9 @@ export default function SetlistDetailPage() {
   return (
     <div>
       <div className="mb-6">
-        <a href="/" className="text-sm text-indigo-600 dark:text-indigo-400 hover:underline">
+        <Link href="/" className="text-sm text-indigo-600 dark:text-indigo-400 hover:underline">
           ← 一覧に戻る
-        </a>
+        </Link>
       </div>
 
       {/* セットリスト情報カード */}
